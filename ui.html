@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Illustration Composer</title>
+  <style>
+    body {
+      background: var(--figma-color-bg, white);
+      color: var(--figma-color-text, #222);
+      font: 13px/1.5 system-ui, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { font-size: 18px; margin: 0; }
+    p { margin: 8px 0 16px; }
+    label { display: block; font-weight: 600; margin: 14px 0 5px; }
+    textarea, select, button {
+      background: var(--figma-color-bg, white);
+      border: 1px solid var(--figma-color-border, #ccc);
+      border-radius: 6px;
+      box-sizing: border-box;
+      color: inherit;
+      font: inherit;
+      padding: 8px 10px;
+      width: 100%;
+    }
+    textarea { resize: vertical; }
+    button { cursor: pointer; margin-top: 10px; }
+    button:disabled { cursor: wait; opacity: .65; }
+    button[type="submit"] {
+      background: var(--figma-color-bg-brand, #0d67cc);
+      border-color: transparent;
+      color: var(--figma-color-text-onbrand, white);
+      margin-top: 16px;
+    }
+    #status[data-error="true"] { color: var(--figma-color-text-danger, #ae2323); }
+    #download { color: var(--figma-color-text-brand, #0d67cc); }
+  </style>
+</head>
+<body>
+  <h1>Сборка иллюстрации</h1>
+  <p>Введите имена компонентов с текущей страницы Figma, по одному в строке.</p>
+  <form id="composer">
+    <label for="names">Компоненты</label>
+    <textarea id="names" rows="5" required></textarea>
+    <label for="format">Размер холста</label>
+    <select id="format">
+      <option value="square">Квадрат · 1080 × 1080</option>
+      <option value="landscape">Горизонтальный · 1600 × 900</option>
+      <option value="portrait">Вертикальный · 900 × 1600</option>
+    </select>
+    <button type="submit">Собрать композицию</button>
+  </form>
+  <button id="export" type="button">Подготовить SVG выбранного фрейма</button>
+  <p id="status" role="status"></p>
+  <a id="download" download="composition.svg" hidden>Скачать SVG</a>
+  <script>
+    const form = document.querySelector('#composer');
+    const exportButton = document.querySelector('#export');
+    const submitButton = form.querySelector('button');
+    const status = document.querySelector('#status');
+    const download = document.querySelector('#download');
+
+    function send(message) {
+      submitButton.disabled = true;
+      exportButton.disabled = true;
+      status.textContent = '';
+      download.hidden = true;
+      if (download.hasAttribute('href')) URL.revokeObjectURL(download.href);
+      download.removeAttribute('href');
+      parent.postMessage({ pluginMessage: message }, '*');
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      send({
+        type: 'compose',
+        names: document.querySelector('#names').value,
+        format: document.querySelector('#format').value,
+      });
+    });
+
+    exportButton.addEventListener('click', () => send({ type: 'export' }));
+
+    window.addEventListener('message', (event) => {
+      if (event.source !== parent) return;
+      const message = event.data?.pluginMessage;
+      if (!message) return;
+
+      submitButton.disabled = false;
+      exportButton.disabled = false;
+      status.dataset.error = String(Boolean(message.error));
+
+      if (message.type === 'status') status.textContent = message.text;
+      if (message.type === 'svg') {
+        download.href = URL.createObjectURL(new Blob([message.svg], { type: 'image/svg+xml' }));
+        download.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>

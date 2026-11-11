@@ -48,7 +48,7 @@ export const compositionStyles = [
   'Look for a narrative pairing that shows a relationship between the objects.',
 ] as const;
 
-export function sceneLayout(canvas: CanvasSize, objects: (CanvasSize & { id: string; role: Role })[],
+export function sceneLayout(canvas: CanvasSize, objects: (CanvasSize & { id: string; role: Role; focus: boolean })[],
   variation: number, random = Math.random) {
   const scene = referenceScenes.find(candidate => Object.keys(candidate.objects).length === objects.length &&
     objects.every(object => Object.prototype.hasOwnProperty.call(candidate.objects, object.id)));
@@ -85,13 +85,48 @@ export function sceneLayout(canvas: CanvasSize, objects: (CanvasSize & { id: str
     return Math.max(margin, Math.min(1 - margin, center));
   }
 
-  return { scale, backdrop, anchors: anchors.map(([x, y], index): Anchor => {
+  const sizes = objects.map(object => ({
+    width: object.width * scale / canvas.width,
+    height: object.height * scale / canvas.height,
+  }));
+  function constrain([x, y]: Anchor, index: number): Anchor {
     const object = objects[index];
-    const crop = object.role === 'background' ? .28 : .20;
+    const crop = object.focus ? .10 : object.role === 'background' ? .28 : .20;
+    return [limit(x, object.width, canvas.width, crop), limit(y, object.height, canvas.height, crop)];
+  }
+
+  const positions = anchors.map(([x, y], index) => {
     const offset = objects.length === 1 ? .12 : 0;
-    return [
-      limit((variation & 1 ? 1 - x - offset : x + offset) + shiftX, object.width, canvas.width, crop),
-      limit((variation & 2 ? 1 - y - offset : y + offset) + shiftY, object.height, canvas.height, crop),
-    ];
+    return constrain([
+      (variation & 1 ? 1 - x - offset : x + offset) + shiftX,
+      (variation & 2 ? 1 - y - offset : y + offset) + shiftY,
+    ], index);
+  });
+
+  const focusIndex = objects.findIndex(object => object.focus);
+  if (focusIndex < 0) return { scale, backdrop, anchors: positions };
+  const [fx, fy] = positions[focusIndex];
+  const focus = sizes[focusIndex];
+  return { scale, backdrop, anchors: positions.map(([x, y], index): Anchor => {
+    if (index === focusIndex) return [x, y];
+    const { width, height } = sizes[index];
+    const dx = (focus.width + width) / 2;
+    const dy = (focus.height + height) / 2;
+    const maxOverlap = objects[index].role === 'background' ? .45 : .20;
+    const candidates: Anchor[] = [[x, y], [fx - dx, y], [fx + dx, y], [x, fy - dy], [x, fy + dy]];
+    let best: Anchor = [x, y];
+    let bestCost = Infinity;
+    for (const candidate of candidates) {
+      const [cx, cy] = constrain(candidate, index);
+      const overlapX = Math.max(0, Math.min(fx + focus.width / 2, cx + width / 2) - Math.max(fx - focus.width / 2, cx - width / 2));
+      const overlapY = Math.max(0, Math.min(fy + focus.height / 2, cy + height / 2) - Math.max(fy - focus.height / 2, cy - height / 2));
+      const overlap = overlapX * overlapY / (width * height);
+      const cost = Math.hypot(cx - x, cy - y) + Math.max(0, overlap - maxOverlap) * 2;
+      if (cost < bestCost) {
+        best = [cx, cy];
+        bestCost = cost;
+      }
+    }
+    return best;
   }) };
 }

@@ -71,7 +71,7 @@ function compose(brief: string, canvas: CanvasSize, palette: Palette, plan: stri
       frame.appendChild(node);
       node.name = asset.name;
       recolor(node, asset.role, palette, palettes[0], asset.custom === true && asset.role === 'background');
-      return { node, id: asset.id, role: asset.role, width: node.width, height: node.height };
+      return { node, id: asset.id, role: asset.role, focus: asset.id === plan[0], width: node.width, height: node.height };
     });
     const layout = sceneLayout(canvas, objects, variation);
     const useDiagonal = layout.backdrop === 'diagonal';
@@ -88,6 +88,8 @@ function compose(brief: string, canvas: CanvasSize, palette: Palette, plan: stri
       node.x = width * x - node.width / 2;
       node.y = height * y - node.height / 2;
     });
+    const focus = objects.find(object => object.focus);
+    if (focus) frame.appendChild(focus.node);
     frame.setPluginData(frameKey, '1');
     figma.currentPage.selection = [frame];
     figma.viewport.scrollAndZoomIntoView([frame]);

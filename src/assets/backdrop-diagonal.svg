@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1000" height="1000">
+	<rect fill-opacity="0" width="1000" height="1000"/>
+	<rect fill="#FDD7B9" width="1000" height="1000"/>
+	<clipPath id="cl_c">
+		<rect width="1000" height="1000"/>
+	</clipPath>
+	<g clip-path="url(#cl_c)">
+		<path fill="#FAC896" transform="translate(470.65 579.844)" d="M529.76434 465.06039C619.02631 326.04657 553.74475 183.62096 562.94739 158.32611L-1.8000001e-05 500.0752L529.76434 465.06039Z"/>
+	</g>
+	<clipPath id="cl_d">
+		<path d="M6.1035156e-05 -3.0517578e-05L1000.0001 -2.2888184e-05L1000.0001 1000.0001L6.1035156e-05 1000.0001L6.1035156e-05 -3.0517578e-05Z"/>
+	</clipPath>
+	<g clip-path="url(#cl_d)">
+		<path fill="#D27532" transform="matrix(0.871275 0.490796 -0.490796 0.871275 257.187 -87.7212)" d="M0 -1L903.82269 -1L903.82269 1L0 1L0 -1Z"/>
+	</g>
+	<clipPath id="cl_e">
+		<path d="M-0.00012207031 0L999.99982 0L999.99988 1000L-0.00012207031 999.99994L-0.00012207031 0Z"/>
+	</clipPath>
+	<g clip-path="url(#cl_e)">
+		<path fill="#D27532" transform="matrix(0.853828 -0.520555 0.520555 0.853828 385.039 1133.1)" d="M0 -1L732.32874 -1L732.32874 1L0 1L0 -1Z"/>
+	</g>
+</svg>

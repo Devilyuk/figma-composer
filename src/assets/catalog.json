@@ -1,0 +1,102 @@
+[
+  {
+    "id": "1-8383",
+    "role": "main",
+    "name": "Пазлы"
+  },
+  {
+    "id": "1-8441",
+    "role": "background",
+    "name": "Пазлы"
+  },
+  {
+    "id": "1-8528",
+    "role": "main",
+    "name": "Книга"
+  },
+  {
+    "id": "1-8582",
+    "role": "background",
+    "name": "Книга"
+  },
+  {
+    "id": "1-8636",
+    "role": "main",
+    "name": "Телефон"
+  },
+  {
+    "id": "1-8792",
+    "role": "background",
+    "name": "Телефон"
+  },
+  {
+    "id": "1-8948",
+    "role": "main",
+    "name": "Наушники"
+  },
+  {
+    "id": "1-9033",
+    "role": "background",
+    "name": "Наушники"
+  },
+  {
+    "id": "1-9118",
+    "role": "main",
+    "name": "Лампа"
+  },
+  {
+    "id": "1-9146",
+    "role": "background",
+    "name": "Лампа"
+  },
+  {
+    "id": "1-9174",
+    "role": "main",
+    "name": "Кошелек"
+  },
+  {
+    "id": "1-9261",
+    "role": "background",
+    "name": "Кошелек"
+  },
+  {
+    "id": "1-9348",
+    "role": "main",
+    "name": "Ручка"
+  },
+  {
+    "id": "1-9373",
+    "role": "background",
+    "name": "Ручка"
+  },
+  {
+    "id": "1-9398",
+    "role": "main",
+    "name": "Папка"
+  },
+  {
+    "id": "1-9421",
+    "role": "background",
+    "name": "Папка"
+  },
+  {
+    "id": "1-9444",
+    "role": "main",
+    "name": "Монета"
+  },
+  {
+    "id": "1-9583",
+    "role": "background",
+    "name": "Монета"
+  },
+  {
+    "id": "1-9730",
+    "role": "main",
+    "name": "Цветы"
+  },
+  {
+    "id": "1-9866",
+    "role": "background",
+    "name": "Цветы"
+  }
+]
